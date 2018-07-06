@@ -1,0 +1,77 @@
+import { fromJS} from 'immutable';
+import { LOADED_TABS, NEW_TAB, NEW_PAGE, UPDATE_FILTER, LOADED_ENTRIES } from './constants';
+
+
+const initialState = fromJS({
+
+
+    currentTab:null,
+    //Default true,
+    newTabPressed: true,
+    //This will also be pulled before page is even rendered
+    //this is getting all kinds of paths from storage.
+    //Don't need to be event listener for this, just require refresh is fine.
+    tabs:[],    
+    //Filter, for what it should pull from it, ie: only project templates of this concentration.
+    filter:{
+     
+        concentrations: [],
+
+    },
+
+    //How I render what's in entries will depend on the tab.
+    //For now assume firebase set up, cause it's going to be same set up as printing service.
+
+    //Content of entries is populated by event listener listening to database.
+    //Entries is an object cached with tabs loaded in.
+    entries: null,
+    //I could keep cache of all previously pulled entries, because odds are if they were on the tab before
+    //they might go back to it? Regardless it's just extending it, keep like this for now and see how it goes.
+    currentPage:1,
+    //This will change depending on tab.
+    totalPages: 1,
+    entryPerPage: 5,
+})
+
+function pathsReducer( state = initialState, action){
+
+
+    switch (action.type){
+
+
+        case UPDATE_FILTER:
+
+            return state
+                .set("filter", action.filter);
+
+        case LOADED_ENTRIES:
+
+            //Will assign by key in index as argument passed into reducer.
+            //const entries = action.entries;
+
+
+            return state
+                .set("entries", action.entries)
+                .set("newTabPressed", false);
+
+        case LOADED_TABS:
+
+            return state
+                .set("tabs", action.tabs);
+
+        case NEW_TAB:
+
+            return state   
+                .set("currentTab", action.tab)
+                .set("newTabPressed", true);
+
+        case NEW_PAGE:
+
+            return state
+                .set("currentPage", action.page);
+
+
+    }
+}
+
+export default pathsReducer;
