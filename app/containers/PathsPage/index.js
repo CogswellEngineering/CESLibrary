@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
-import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
+import { Tabs, TabContent } from 'react-tabs-redux';
 
 import { createStructuredSelector } from 'reselect';
 import { compose} from 'redux';
@@ -10,9 +10,14 @@ import { connect} from 'react-redux';
 import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
 
+import isEmpty from 'utils/isEmptyObject';
+
 import {
 
-    PathPageWrapper
+  //Why is it tripping on this?
+    PathPageWrapper,
+    StyledTabLink,
+
 } from 'components/StyledComponents/PathsPage/';
 
 import {
@@ -45,6 +50,8 @@ class PathsPage extends Component{
 
         super(props);
         this.unsubscribe = null;
+        console.log("props from pathspage",props);
+
     }
 
     componentDidMount(){
@@ -52,16 +59,21 @@ class PathsPage extends Component{
         //Pull all the tabs.
 
         const firebaseRef = this.props.firebase;
+        const docRef = firebaseRef.firestore().collection("Library").doc("Paths");
+        console.log("doc ref", docRef);
+        docRef.get()
+            .then (snapshot => {
 
-        firebaseRef.firestore().collection("Library").doc("Paths").get( snapshot => {
 
             if (snapshot.exists){
-
-                console.log("snapshot data", snapshot.data());
+                
                 this.props.onTabsLoaded(snapshot.get("tabs"));
             }
 
-        });
+        })
+        .catch(err => {
+            console.log(err);
+        })
         
     }
 
@@ -72,8 +84,14 @@ class PathsPage extends Component{
         //If new tab was pressed then unsubscribe and set up new listener based on new tab.
         if (this.props.newTabPressed && this.props.currentTab != null){
 
-            this.unsubscribe();
-            const entriesRef = firebaseRef.firestore().collection("Library").doc("Paths").collection(this.props.currentTab);
+            //If had listener, stop listening.
+            if (this.unsubscribe){
+                this.unsubscribe();
+            }
+            console.log("current tab is", this.props.currentTab);
+
+            const collection = this.props.currentTab.replace(" ","");
+            const entriesRef = firebaseRef.firestore().collection("Library").doc("Paths").collection(collection);
             const options = {
                 includeMetadataChanges: true,
             };
@@ -92,8 +110,11 @@ class PathsPage extends Component{
                         const doc = docs[index];
 
                         if (doc.exists){
-                            console.log("entry data", doc.data());
-                            entries[this.props.currentTab].push(doc.data());
+
+
+                            if (!isEmpty(doc.data())){                                
+                                entries[this.props.currentTab].push(doc.data());
+                            }
                         }
                     }
 
@@ -108,21 +129,56 @@ class PathsPage extends Component{
 
     render(){
 
-        const {entries, currentPage, currentTab, tabs} = this.props;
+
+        const {entries, currentPage, currentTab, tabs,
+            onNewTab, onNewPage, onUpdateFilter} = this.props;
+
+        console.log("Paths props", this.props);
+
+       
 
         if (entries == null){
             return null;
         }
 
+        //Initializes the tab links, because it throws displayname errors if map and create within the map
+        var tabLinks = [];
+        
+        for (const index in tabs){
+            console.log("tab", tabs[index]);
+            tabLinks.push(<StyledTabLink to={tabs[index]} key={tabs[index]} > {tabs[index]} </StyledTabLink>);
+        }
+
         return (<PathPageWrapper>
 
-            <Tabs>
+           
+            <Tabs  name="tabs1" selectedTab = {currentTab}
+                handleSelect = { (selectedTab, namespace) => {
 
+                    console.log("selected tab is", selectedTab);
+                    onNewTab(selectedTab);
+                }}
+            >
+             
+               {tabLinks.map( tabLink => {
+                   return  tabLink;
+               })}
+                
+                <TabContent for = {currentTab}>
+                    
+                    {  entries != null && entries[currentTab] != null && entries[currentTab].length > 0? entries[currentTab].map( entry => {
 
+                        //So all this is download url to image and then spreads it.
+                        //Basically just swapping this element.
+                        return <div key={entry} ></div>
+                }) : <p> No content </p> 
+            }
+                </TabContent>
 
 
             </Tabs>
 
+             
 
 
             </PathPageWrapper>
@@ -170,7 +226,7 @@ function mapDispatchToProps(dispatch){
 
         onLoadEntries : (entries) => {
 
-            return dispatch(loadedEntries());
+            return dispatch(loadedEntries(entries));
         },
     }
 }

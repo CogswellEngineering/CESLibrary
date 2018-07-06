@@ -1,10 +1,11 @@
 import { createSelector} from 'reselect';
 import { PATHS_PATH} from 'components/Header/pages';
 
-const selectPaths = (state) => {state.get(PATHS_PATH);}
+//No wait, it can't be Paths_path problem, the state passed in itself is null
+const selectPaths = (state) => { return state.get(PATHS_PATH)};
 
 
-const makeSelectPage = createSelector(
+const makeSelectPage = () => createSelector(
 
     selectPaths,
     (pathsState) => {
@@ -20,7 +21,7 @@ const makeSelectPage = createSelector(
 );
 
 //Actually instead of null, current tab could be number
-const makeSelectTab = createSelector(
+const makeSelectTab = () => createSelector(
 
     selectPaths,
     (pathsState) => {
@@ -38,7 +39,7 @@ const makeSelectTab = createSelector(
 );
 
 //Actually instead of null, current tab could be number
-const makeSelectTabs = createSelector(
+const makeSelectTabs = () => createSelector(
 
     selectPaths,
     (pathsState) => {
@@ -62,7 +63,7 @@ const makeSelectTabs = createSelector(
 );
 
 //Actually instead of null, current tab could be number
-const makeSelectEntries = createSelector(
+const makeSelectEntries = () => createSelector(
 
     selectPaths,
     (pathsState) => {
@@ -80,7 +81,7 @@ const makeSelectEntries = createSelector(
 );
 
 //Actually instead of null, current tab could be number
-const makeSelectNewTabPressed = createSelector(
+const makeSelectNewTabPressed = () => createSelector(
 
     selectPaths,
     (pathsState) => {

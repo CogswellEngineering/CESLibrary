@@ -49,18 +49,21 @@ function pathsReducer( state = initialState, action){
             //Will assign by key in index as argument passed into reducer.
             //const entries = action.entries;
 
-
+            console.log("new entries", action.entries);
             return state
                 .set("entries", action.entries)
                 .set("newTabPressed", false);
 
         case LOADED_TABS:
 
+            console.log("loaded tabs", action.tabs);
             return state
-                .set("tabs", action.tabs);
+                .set("tabs", action.tabs)
+                .set("currentTab", action.tabs[0]);
 
         case NEW_TAB:
 
+            
             return state   
                 .set("currentTab", action.tab)
                 .set("newTabPressed", true);
@@ -69,6 +72,10 @@ function pathsReducer( state = initialState, action){
 
             return state
                 .set("currentPage", action.page);
+
+        default:
+
+            return state;
 
 
     }
