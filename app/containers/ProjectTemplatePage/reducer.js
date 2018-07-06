@@ -8,15 +8,20 @@ import {
 
 const initialState = fromJS({
 
-    title:"",
-    instructions:[],
-    benefits:[],
-    downloadURL:"",
+    //Honestly even this could be within pages lol. Or pages could be array within firestore anyway.
+    templateInfo: {,
+        isEmpty:true,
+        title:"",
+        instructions:[],
+        benefits:[],
+        download:"",
+    },
     currentPage:1,
 
     //Pages array, basically containing content for page.
     pages:[],
     //Need to think more about what example will have, this should be fine though.
+    //Honestly example could just be within pages
     example:{
         exampleTitle:"",
         exampleDescription:"",
@@ -32,13 +37,9 @@ function projectTemplateReducer( state = initialState, action){
         case TEMPLATE_LOADED:
 
             console.log("template", action.templateInfo);
-            const {title, instructions, benefits, downloadURL, example } = action.templateInfo;
             return state
-                .set("title", title)
-                .set("instructions", instructions)
-                .set("benefits", benefits)
-                .set("downloadURL", downloadURL)
-                .set("example", example);
+                .set("templateInfo", action.templateInfo.metaData)
+                .set("pages", action.templateInfo.pages);
 
         //Maybe instead of page just scrolling?
         case NEW_PAGE:

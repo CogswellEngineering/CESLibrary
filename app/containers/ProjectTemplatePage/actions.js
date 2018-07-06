@@ -26,12 +26,12 @@ function newPage(page){
     };
 }
 
-function downloadClicked(url){
+function downloadClicked(file){
 
     return {
         
         type: DOWNLOAD_CLICKED,
-        url,
+        file,
     };
 }
 
