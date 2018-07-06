@@ -8,3 +8,13 @@
  * Follow this format:
  * export const YOUR_ACTION_CONSTANT = 'yourproject/YourContainer/YOUR_ACTION_CONSTANT';
  */
+
+export const DEFAULT_LOCALE = 'en';
+const prefix = 'CESPrintingService/App/';
+export const LOAD_APP = prefix + 'LOAD_APP';
+export const APP_LOADED = prefix + 'APP_LOADED';
+export const AUTH_CHECKED = prefix + 'AUTH_CHECKED';
+
+//More clarity's sake should have these instead of auth changed, 
+export const LOGOUT = prefix + 'LOGOUT';
+export const LOGIN =  prefix + 'LOGIN';
