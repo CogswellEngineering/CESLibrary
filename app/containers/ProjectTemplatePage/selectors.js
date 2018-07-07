@@ -6,6 +6,22 @@ import {
 
 const selectProjectTemplate = (state) => state.get(PROJECT_TEMPLATE_PATH);
 
+const makeSelectDownload = () => createSelector(
+
+
+    selectProjectTemplate,
+    (projectTemplateState) => {
+
+        if (projectTemplateState == null) {
+            
+            return null
+        };
+
+
+        console.log("get here");
+        return projectTemplateState.get("download");
+    }
+)
 const makeSelectPage = () => createSelector(
 
     selectProjectTemplate,
@@ -60,6 +76,6 @@ export{
     makeSelectPage,
     makeSelectPages,
     makeSelectTemplateInfo,
-
+    makeSelectDownload,
 };
 

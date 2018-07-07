@@ -18,6 +18,7 @@ import {
     makeSelectPage,
     makeSelectPages,
     makeSelectTemplateInfo,
+    makeSelectDownload,
 
 } from './selectors';
 
@@ -29,7 +30,7 @@ import {
     makeSelectFirebase
 } from 'containers/App/selectors';
 
-import { ProjectTemplateWrapper} from 'components/ProjectTemplatePage';
+import { ProjectTemplateWrapper} from 'components/StyledComponents/ProjectTemplatePage';
 
 
 //So this could be component, cause really just passing in values into it
@@ -40,7 +41,15 @@ import { ProjectTemplateWrapper} from 'components/ProjectTemplatePage';
 class ProjectTemplatePage extends Component{
 
 
+    componentWillMount(){
+
+        console.log("I am here");
+    }
+
+
     componentDidMount(){
+
+        console.log("hello")
 
         const firestoreRef = this.props.firebase.firestore();
 
@@ -76,19 +85,29 @@ class ProjectTemplatePage extends Component{
 
        if (this.props.templateInfo.isEmpty){
            
+        console.log("hello render");
             return null;
        }
 
-       const { templateInfo, pages, currentPage} = this.props;
-       const { title, description, instructions, benefits, download } = templateInfo;
+       const { templateInfo, download, pages, currentPage,
+        onDownload, onPageTurn,} = this.props;
+        console.log("props in template page", this.props);
+       const { title, description, instructions, benefits } = templateInfo;
+       console.log("template info", templateInfo);
+       console.log("download",download);
 
        //I forgot flow I had in mind, yay distractions.
        //Don't think need saga, cause don't care bout yielding for download
        //oh wait, updating amount of downloads maybe?
+       //Just need to test download, layou of everything not as important.
 
        return ( <ProjectTemplateWrapper>
 
-           
+           <h1> {title} </h1>
+
+           <p> {description} </p>
+
+           <button onClick = {() => {onDownload(download);}}> Download </button>
 
         </ProjectTemplateWrapper>
        )
@@ -109,6 +128,7 @@ const mapStateToProps = createStructuredSelector({
     currentPage: makeSelectPage(),
     pages: makeSelectPages(),
     templateInfo: makeSelectTemplateInfo(),
+    download: makeSelectDownload(),
 
 });
 
@@ -127,9 +147,9 @@ function mapDispatchToProps(dispatch){
             return dispatch(newPage(page));
         },
 
-        onDownload : (url) => {
-
-            return dispatch(downloadClicked(url));
+        onDownload : (file) => {
+            console.log("dispatching to download", file);
+            return dispatch(downloadClicked(file));
         },
     };
 
