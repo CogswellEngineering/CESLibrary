@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
-import { Tabs, TabContent } from 'react-tabs-redux';
+import { Link} from 'react-router-dom';
+import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
 import { createStructuredSelector } from 'reselect';
 import { compose} from 'redux';
@@ -14,9 +15,9 @@ import isEmpty from 'utils/isEmptyObject';
 
 import {
 
-  //Why is it tripping on this?
     PathPageWrapper,
     StyledTabLink,
+    TabLinkWrapper,
 
 } from 'components/StyledComponents/PathsPage/';
 
@@ -40,7 +41,7 @@ import{
 import {
     makeSelectFirebase
 } from 'containers/App/selectors';
-import { PATHS_PATH} from 'components/Header/pages';
+import { PATHS_PATH, PROJECT_TEMPLATE_PATH} from 'components/Header/pages';
 
 
 class PathsPage extends Component{
@@ -112,8 +113,11 @@ class PathsPage extends Component{
                         if (doc.exists){
 
 
-                            if (!isEmpty(doc.data())){                                
-                                entries[this.props.currentTab].push(doc.data());
+
+                            if (!isEmpty(doc.data())){         
+                                console.log("doc", doc);                  
+                                //Just storing id, for link, and prob name and poster for it.     
+                                entries[this.props.currentTab].push({id:doc.id, title: doc.data().metaData.title});
                             }
                         }
                     }
@@ -144,9 +148,11 @@ class PathsPage extends Component{
         //Initializes the tab links, because it throws displayname errors if map and create within the map
         var tabLinks = [];
         
+        //This way worked before, yet now doesn't?
         for (const index in tabs){
             console.log("tab", tabs[index]);
-            tabLinks.push(<StyledTabLink to={tabs[index]} key={tabs[index]} > {tabs[index]} </StyledTabLink>);
+            //Okay, styledTablinks no work, so just need to encase it isntead.
+            tabLinks.push(<StyledTabLink key={tabs[index]}><TabLink to={tabs[index]}  > {tabs[index]} </TabLink></StyledTabLink>);
         }
 
         return (<PathPageWrapper>
@@ -160,26 +166,24 @@ class PathsPage extends Component{
                 }}
             >
              
-               {tabLinks.map( tabLink => {
+             <TabLinkWrapper>
+             {tabLinks.map( tabLink => {
                    return  tabLink;
                })}
                 
+            </TabLinkWrapper>
                 <TabContent for = {currentTab}>
                     
                     {  entries != null && entries[currentTab] != null && entries[currentTab].length > 0? entries[currentTab].map( entry => {
 
                         //So all this is download url to image and then spreads it.
-                        //Basically just swapping this element.
-                        return <div key={entry} ></div>
+                        //Basically just swapping this element. Will also have link with url to actual content
+                        const url = PROJECT_TEMPLATE_PATH.replace(":templateID",entry.id);
+                        return <div key={entry}> <Link to={url}> {entry.title} </Link> </div>
                 }) : <p> No content </p> 
             }
                 </TabContent>
-
-
             </Tabs>
-
-             
-
 
             </PathPageWrapper>
         )
