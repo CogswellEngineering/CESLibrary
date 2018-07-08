@@ -1,11 +1,18 @@
+
+export const LOGIN_PATH = homeURL + "/users/login";
+export const REGISTER_PATH = homeURL + "/users/register";
+export const USER_PROFILE_PATH = homeURL + "/account/:uid";
+export const PATHS_PATH = "/paths";
+export const PROJECT_TEMPLATE_PATH = PATHS_PATH+"/project-template/:templateID";
+
 export const navPages = [
     {
       name: "Home",
       url: "/",
     },
    {
-      name: "Events",
-      url:"/events"
+      name: "Paths",
+      url: PATHS_PATH,
     },
     {
       name:"Blog",
@@ -28,12 +35,4 @@ export const servicePages = [
 
 
 const homeURL = "http://localhost:3000";
-
-
-export const LOGIN_PATH = homeURL + "/users/login";
-export const REGISTER_PATH = homeURL + "/users/register";
-export const USER_PROFILE_PATH = homeURL + "/account/:uid";
-export const PATHS_PATH = "/paths";
-
-
 

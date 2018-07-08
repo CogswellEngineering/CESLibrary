@@ -7,7 +7,26 @@ import { fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
 import createReducer from './reducers';
+import firebase from 'firebase';
 
+
+const fbConfig = {
+  
+  apiKey: 'AIzaSyADrVRU9CSIktkXnvQXcXFeOPicmYtC91M',
+  authDomain: 'ceswebsite-cf841.firebaseapp.com',
+  databaseURL: 'https://ceswebsite-cf841.firebaseio.com',
+  projectId: 'ceswebsite-cf841',
+  storageBucket: 'ceswebsite-cf841.appspot.com',
+  messagingSenderId: '612020639792',
+
+
+};
+
+firebase.initializeApp(fbConfig);
+
+const firestore = firebase.firestore();
+const settings = {/* your settings... */ timestampsInSnapshots: true};
+firestore.settings(settings);
 const sagaMiddleware = createSagaMiddleware();
 
 export default function configureStore(initialState = {}, history) {
