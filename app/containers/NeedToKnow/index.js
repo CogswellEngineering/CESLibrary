@@ -2,8 +2,16 @@ import React, { Component} from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import { PAGE_TITLE} from './constants';
 
 import injectReducer from 'utils/injectReducer';
+import reducer from './reducer';
+
+import {
+
+    makeSelectContent,
+    makeSelectPageOpened,
+} from './selectors';
 
 import { makeSelectFirebase} from 'containers/App/selectors';
 
@@ -60,8 +68,10 @@ class NeedToKnow extends Component{
 const mapStateToProps = createStructuredSelector({
 
     firebase: makeSelectFirebase(),
+    content : makeSelectContent(),
+    pageOpen : makeSelectPageOpened();
 
-})
+});
 
 function mapDispatchToProps(dispatch){
 
@@ -88,9 +98,11 @@ function mapDispatchToProps(dispatch){
 }
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withReducer = injectReducer({key : PAGE_TITLE, reducer});
 
 export default compose(
 
     withConnect,
+    withReducer,
 
 )(NeedToKnow);
