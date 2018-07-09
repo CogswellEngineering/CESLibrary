@@ -49,6 +49,7 @@ const PageButtons = styled.div`
 
 const PageButton = styled.button`
 
+    display:block;
 
 `
 

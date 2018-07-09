@@ -54,11 +54,12 @@ class NeedToKnow extends Component{
         needToKnowsRef.doc(needToKnowId).get()
             .then (snapshot => {
 
-                console.log("snapshot",snapshot);
 
                 if (snapshot.exists){
 
                     //Dispatches content loaded.
+                    console.log("snapshot",snapshot.data());
+
                     this.props.onContentLoaded(snapshot.data());
                 }
 
@@ -74,7 +75,8 @@ class NeedToKnow extends Component{
 
     render(){
 
-        const { content, pageOpen} = this.props;
+        const { content, pageOpen,
+            onPopOverOpen, onPopOverClose} = this.props;
         
         if (content == null){
 
@@ -87,9 +89,9 @@ class NeedToKnow extends Component{
 
             <PageButtons>
 
-                {content.pages.map(pageName => {
+                {content.pages.map(page => {
 
-                    return <PageButton> {pageName} </PageButton>
+                    return <PageButton name = {page.index} onClick = {(evt) => {onPopOverOpen(evt);}}> {page.name} </PageButton>
                 })}
 
             </PageButtons>
@@ -116,7 +118,8 @@ class NeedToKnow extends Component{
 
                 </ContentLinksWrapper>
 
-                <ContentCloseButton>{/*Image that is an x*/} </ContentCloseButton>
+                <ContentCloseButton onClick = {() => {onPopOverClose();}}> Close{/*Image that is an x*/} </ContentCloseButton>
+                
             </ContentWrapper>
 
 
@@ -147,7 +150,11 @@ function mapDispatchToProps(dispatch){
             return dispatch(loadedNeedToKnow(content));
         },
 
-        onPopOverOpen : (page) => {
+        onPopOverOpen : (evt) => {
+
+            const target = evt.target;
+
+            const page = target.name;
 
             return dispatch(openPopover(page));
         },
