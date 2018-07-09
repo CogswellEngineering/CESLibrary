@@ -22,6 +22,22 @@ import {
     closePopover,
 } from './actions';
 
+
+import {
+
+    NeedToKnowWrapper,
+    ContentWrapper,
+    ContentTitle,
+    ContentBullets,
+    ContentBullet,
+    ContentLinksWrapper,
+    ContentLink,
+    ContentCloseButton,
+    PageButtons,
+    PageButton,
+
+} from 'components/StyledComponents/NeedToknow';
+
 //This isn't going to be a page, but a container on page.
 //Will have popover, I'll probably take in functionality for react-strap, unless just get specifically it.
 //This will recieve prop for specific need to know to load
@@ -42,6 +58,8 @@ class NeedToKnow extends Component{
 
                 if (snapshot.exists){
 
+                    //Dispatches content loaded.
+                    this.props.onContentLoaded(snapshot.data());
                 }
 
             })
@@ -56,7 +74,54 @@ class NeedToKnow extends Component{
 
     render(){
 
-        return null;
+        const { content, pageOpen} = this.props;
+        
+        if (content == null){
+
+            console.log("loading content");
+
+            return null;
+        }
+
+        return  (<NeedToKnowWrapper>
+
+            <PageButtons>
+
+                {content.pages.map(pageName => {
+
+                    return <PageButton> {pageName} </PageButton>
+                })}
+
+            </PageButtons>
+
+            <ContentWrapper>
+                
+                <ContentTitle> {content.title} </ContentTitle>
+
+                <ContentBullets >
+                    {content.bullets.map(bullet => {
+
+                        return <ContentBullet> {bullet} </ContentBullet>
+                    })}
+                 
+                </ContentBullets>
+
+                <ContentLinksWrapper> 
+                    {content.links.map(link => {
+
+                        return <ContentLink to={link.url}> {link.name} </ContentLink>
+                            
+                        })   
+                    }
+
+                </ContentLinksWrapper>
+
+                <ContentCloseButton>{/*Image that is an x*/} </ContentCloseButton>
+            </ContentWrapper>
+
+
+
+        </NeedToKnowWrapper>)
 
     }
 
