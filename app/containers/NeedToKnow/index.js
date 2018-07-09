@@ -38,6 +38,7 @@ import {
 
 } from 'components/StyledComponents/NeedToknow';
 
+import ScrollArea from 'react-scrollbar';
 //This isn't going to be a page, but a container on page.
 //Will have popover, I'll probably take in functionality for react-strap, unless just get specifically it.
 //This will recieve prop for specific need to know to load
@@ -111,6 +112,7 @@ class NeedToKnow extends Component{
                 
                 <ContentTitle> {openContent.title} </ContentTitle>
 
+                <ScrollArea>
                 <ContentBullets >
                     {openContent.bullets.map(bullet => {
 
@@ -118,6 +120,7 @@ class NeedToKnow extends Component{
                     })}
                  
                 </ContentBullets>
+                </ScrollArea>
 
                 <ContentLinksWrapper> 
                     {openContent.links.map(link => {
