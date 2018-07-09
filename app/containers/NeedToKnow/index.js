@@ -85,23 +85,34 @@ class NeedToKnow extends Component{
             return null;
         }
 
+        const openContent = content.pages[pageOpen];
+
+        //Setting up the page buttons
+
+        var pageButtons = [];
+        for (var i = 0; i < content.pages.length; ++i){
+
+            console.log(" i is", i);
+            const title = content.pages[i].title;
+            pageButtons.push(<PageButton key={index}  onClick = {(evt) => {onPopOverOpen(evt);}}> {title} </PageButton>)
+        }
+
         return  (<NeedToKnowWrapper>
 
             <PageButtons>
 
-                {content.pages.map(page => {
-
-                    return <PageButton name = {page.index} onClick = {(evt) => {onPopOverOpen(evt);}}> {page.name} </PageButton>
+                {pageButtons.map(pageButton => {
+                    return pageButton;
                 })}
 
             </PageButtons>
 
             <ContentWrapper>
                 
-                <ContentTitle> {content.title} </ContentTitle>
+                <ContentTitle> {openContent.title} </ContentTitle>
 
                 <ContentBullets >
-                    {content.bullets.map(bullet => {
+                    {openContent.bullets.map(bullet => {
 
                         return <ContentBullet> {bullet} </ContentBullet>
                     })}
@@ -109,7 +120,7 @@ class NeedToKnow extends Component{
                 </ContentBullets>
 
                 <ContentLinksWrapper> 
-                    {content.links.map(link => {
+                    {openContent.links.map(link => {
 
                         return <ContentLink to={link.url}> {link.name} </ContentLink>
                             
@@ -119,7 +130,7 @@ class NeedToKnow extends Component{
                 </ContentLinksWrapper>
 
                 <ContentCloseButton onClick = {() => {onPopOverClose();}}> Close{/*Image that is an x*/} </ContentCloseButton>
-                
+
             </ContentWrapper>
 
 
@@ -154,7 +165,9 @@ function mapDispatchToProps(dispatch){
 
             const target = evt.target;
 
-            const page = target.name;
+
+            const page = target.key;
+            console.log("key of target was", page);
 
             return dispatch(openPopover(page));
         },

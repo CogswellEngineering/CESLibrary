@@ -12,7 +12,7 @@ const initialState = fromJS({
 
     content:null,
     //0 for meaning none open.
-    pageOpen: 0,
+    pageOpen: -1,
 
 
 });
@@ -34,7 +34,7 @@ export default function needToKnowReducer(state = initialState, action){
         case CLOSE_POPOVER:
 
             return state
-                .set("pageOpen",0);
+                .set("pageOpen",-1);
         
         default:
 
