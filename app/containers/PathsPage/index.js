@@ -45,6 +45,7 @@ import {
 } from 'containers/App/selectors';
 import { PATHS_PATH, PROJECT_TEMPLATE_PATH} from 'components/Header/pages';
 
+import PathsUnique from 'containers/PathsUnique';
 
 class PathsPage extends Component{
 
@@ -189,6 +190,7 @@ class PathsPage extends Component{
                     unique per concentration, can think of better name later*/}
                     {currentTab.unique? 
                     //If unique then render the buttons to show need to knows for pressed button
+                        <PathsUnique/>
                         :
                             //Otherwise render the dropdown of checkboxes
                             //Is this container doing too much? Can I break this into two parts?
@@ -203,7 +205,7 @@ class PathsPage extends Component{
                 
 
                 {/* Tab content will be replaced with PathsDistinct and PathsPage, and each will have own entries variable
-                    Code have here will be placed in PathsGeneral*/}
+                    Code have here will be placed in PathsGeneral, the same tabcontent logic actually good for unique paths.*/}
                 <TabContent for = {currentTab}>
                     
                     {  entries != null && entries[currentTab] != null && entries[currentTab].length > 0? entries[currentTab].map( entry => {

@@ -2,8 +2,6 @@ import React, { Component} from 'react';
 import { createStructuredSelector } from 'reselect';
 import { compose} from 'redux';
 import { connect} from 'react-redux';
-import { Link} from 'react-router-dom';
-
 import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
 
@@ -26,6 +24,18 @@ import {
     makeSelectConcentrations,
     makeSelectContent,
 } from './selectors';
+
+import {
+    FilterWrapper,
+    FilterItems,
+    FilterItem,
+    ResultWrapper,
+} from 'components/StyledComponents/PathsPage';
+
+import { 
+    SelectPrompt,
+} from 'components/StyledComponents/UniquePathsPage';
+
 
 class PathsUnique extends Component{
 
@@ -100,22 +110,50 @@ class PathsUnique extends Component{
     render(){
 
         const {concentration, concentrations, content,
-        onConcentrationSelected} = this props;
-
-
-        const concentrationsSelection = (
-            
-
-
-        )
+        onConcentrationSelected} = this.props;
 
         if (concentrations.length == 0){
 
             return null;
         }
-        else if (concentration == null){
+
+        //Rendering list of concentrations to select from.
+        const concentrationsSelection = ( <FilterWrapper>
+                
+                <FilterItems>
+                    {concentrations.map(concentration => {
+
+                            //Will also set style for color;
+                            //Setting style.
+                        <FilterItem key = {concentration.name} style={{color: concentrations.color}} > {concentration.name}  </FilterItem>
+                    })}
+                </FilterItems>
+
+            </FilterWrapper>
+        )
+
+        var results = null;
+        if (concentration == null){
 
             //Then will prompt them to select a concentration.
+            results = (<ResultWrapper>
+
+                    <SelectPrompt> Please select a concentration </SelectPrompt>
+
+                </ResultWrapper>
+            )
+        }
+        else{
+            //Other if not null, then display the content.
+            //This will just render the NeedToKnow, passing in the content here as attribute.
+            //I'll add it after merge it in.
+
+            results = (<ResultWrapper>
+                
+
+                
+                </ResultWrapper>)
+
         }
 
 
@@ -157,3 +195,13 @@ function mapDispatchToProps(dispatch){
     }
 
 }
+
+const withConnect = connect(mapStateToProps,mapDispatchToProps);
+const withReducer = injectReducer({key:"PathsUnique",reducer});
+
+export default compose(
+
+    withConnect,
+    withReducer,
+
+)(PathsUnique);
