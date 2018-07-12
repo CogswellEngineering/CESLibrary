@@ -12,7 +12,12 @@ const initialState = fromJS({
     //this is getting all kinds of paths from storage.
     //Don't need to be event listener for this, just require refresh is fine.
     tabs:[],    
+
     //Filter, for what it should pull from it, ie: only project templates of this concentration.
+    //how I actually do this might change, because depending on tab they're in the filter on listener
+    //to firestore changes. NeedToKnow actually easy, literally listen to specific document chosen.
+    //then okay, so can't have array, but can query properties of object
+    //so for example they'll have property of gde:true, and if it's not there will be null so the == query won't go through.
     filter:{
      
         concentrations: [],

@@ -18,6 +18,8 @@ import {
     PathPageWrapper,
     StyledTabLink,
     TabLinkWrapper,
+    FilterWrapper,
+    FilterItem,
 
 } from 'components/StyledComponents/PathsPage/';
 
@@ -98,6 +100,9 @@ class PathsPage extends Component{
             };
 
             
+            //This needs to change to contain query, of filter. Will first work on just making sure selection is correct
+            //then will implement into this.
+            //Wrote down process in reducer.
             this.unsubscribe = entriesRef.onSnapshot( options, docsSnapshot => {
 
                     const docs = docsSnapshot.docs;
@@ -157,6 +162,7 @@ class PathsPage extends Component{
 
         return (<PathPageWrapper>
 
+
            
             <Tabs  name="tabs1" selectedTab = {currentTab}
                 handleSelect = { (selectedTab, namespace) => {
@@ -172,6 +178,32 @@ class PathsPage extends Component{
                })}
                 
             </TabLinkWrapper>
+
+                <FilterWrapper>
+                    {/* I could hardcode the filters, or could also pull them, no listener just single get on mount though*/}
+                    {/* whats rendered here depends on the tab, in the dispatch on update filter, might pass in current tab too
+                    though not needed, cause just get from passed in state actually.*/}
+
+                    {/* Honestly makes pulling tabs feel pretty pointless lol. Cause other special cases like these will have to add an or
+                    I could add something to object so it has the id, aka what will be shown on tab. But could also have unique flag meaning
+                    unique per concentration, can think of better name later*/}
+                    {currentTab.unique? 
+                    //If unique then render the buttons to show need to knows for pressed button
+                        :
+                            //Otherwise render the dropdown of checkboxes
+                            //Is this container doing too much? Can I break this into two parts?
+                            //Instead of styled components, I could just mke Paths have sub container
+                            //that renders depending on kind of tab, so will still have this property
+                            //but then there's that kind of container for unique, which has buttons and rest of page
+                            // is for content
+                            //otherwise shows the browse results that match filter.
+                            null
+                    }
+                </FilterWrapper>
+                
+
+                {/* Tab content will be replaced with PathsDistinct and PathsPage, and each will have own entries variable
+                    Code have here will be placed in PathsGeneral*/}
                 <TabContent for = {currentTab}>
                     
                     {  entries != null && entries[currentTab] != null && entries[currentTab].length > 0? entries[currentTab].map( entry => {
